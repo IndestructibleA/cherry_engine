@@ -9,7 +9,7 @@
                                                     */
 
 //     Cherry Engine version 0.0.1
-// A basic engine for web games writing in html, and javascript technology .
+// Basic engine for writing web games in html and javascript. At the moment it is still being developed.
 // этот движок работает с тегом Canvas. Достоинства - максимальная производительность.
 // Движок создан при поддержке Alcoshopers Lab
 // Автор: IndestructibleA   GitHub: https://github.com/IndestructibleA 
