@@ -1,2 +1,2 @@
 # cherry_engine
-A basic engine for web games writing in html, and javascript technology .
+Basic engine for writing web games in html and javascript. At the moment it is still being developed.
