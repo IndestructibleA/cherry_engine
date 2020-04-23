@@ -1,15 +1,17 @@
- /*                                                                                                                                        
-                                                     
- _____ _                      _____         _         
-|     | |_ ___ ___ ___ _ _   |   __|___ ___|_|___ ___ 
-|   --|   | -_|  _|  _| | |  |   __|   | . | |   | -_|
-|_____|_|_|___|_| |_| |_  |  |_____|_|_|_  |_|_|_|___|
-                      |___|            |___|          
-                                                    
-                                                    */
+ /* 
+                                                                              
+                                                     __.--~~.,-.__
+ _____ _                      _____         _          `~-._.-(`-.__`-.
+|     | |_ ___ ___ ___ _ _   |   __|___ ___|_|___ ___          \    `~~`
+|   --|   | -_|  _|  _| | |  |   __|   | . | |   | -_|    .--./ \
+|_____|_|_|___|_| |_| |_  |  |_____|_|_|_  |_|_|_|___|   /#   \  \.--.
+                      |___|            |___|             \    /  /#   \
+                                                          '--'   \    /
+                                                                  '--'              
+                                                                             */
 
 //     Cherry Engine version 0.0.1
-// Basic engine for writing web games in html and javascript. At the moment it is still being developed.
+// A basic engine for web games writing in html, and javascript technology .
 // этот движок работает с тегом Canvas. Достоинства - максимальная производительность.
 // Движок создан при поддержке Alcoshopers Lab
 // Автор: IndestructibleA   GitHub: https://github.com/IndestructibleA 
@@ -63,11 +65,30 @@ var cherryEngine = function(_canvas){
   
   
   //NODES - Ноды. Они же игровые объекты.//
+  class Node {
+   constructor (pars) {
+     
+     
+   } 
+    
+  }
+  
+  class NodeRect extends Node {
+    
+  
+  }
+  
+  var create_node = function (par) {
+   if(params.type === 'rectangle')
+    return new NodeRect(par);
+    
+  };
+  
   this.create_node = function (scene, params){
    if (typeof scene.nodes === 'undefined'){
-      var nds = scene.nodes = []; //массив объектов 
+      var nds = scene.nodes = []; //массив объектов если элемента не существует
    } 
-   nds.push(params);
+   nds.push(create_node(params)); //Будет создавать сами ноды с характеристиками объекта
     
   };
   
