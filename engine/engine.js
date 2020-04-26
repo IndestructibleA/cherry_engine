@@ -11,14 +11,14 @@
                                                                              */
 
 //     Cherry Engine version 0.0.1
-// A basic engine for web games writing in html, and javascript technology .
+// Basic engine for writing web games in html and javascript. At the moment it is still being developed.
 // этот движок работает с тегом Canvas. Достоинства - максимальная производительность.
 // Движок создан при поддержке Alcoshopers Lab
 // Автор: IndestructibleA   GitHub: https://github.com/IndestructibleA 
 
-var cherryEngine = function(_box){
+var Cherry = function(_box, _layers){
    'use strict';
-  var cherryEngine = this; //ссылка на себя
+  var Cherry = this; //ссылка на себя
         
         // Глобальные переменные //
   var 
@@ -32,13 +32,20 @@ var cherryEngine = function(_box){
   var _INIT = function(){  
     if (typeof _box !== 'object') _box = document.getElementById(_box);
     
-    
-    
     var box = _box.getBoundingClientRect();
     canvas_offset = vector2(box.left, box.top);
     size = vector2(box.width, box.height);
-    cherryEngine.create_layer('main', 0);
-    cherryEngine.select_layer('main');
+    if (typeof _layers === 'object'){
+      var i, j = 0;
+      for (i in _layers) {
+         Cherry.create_layer(i, j, !!_layers[i].auto_clear); //!! для булевого значения без лишних проверок
+         j++;
+      }
+      
+    } else {
+    Cherry.create_layer('main', 0, true); 
+    Cherry.select_layer('main');
+    }
     
     //context.fillText('Canvas инициализирован. Жду дальнейших инструкций', 30, 20); 
     
@@ -52,6 +59,7 @@ var cherryEngine = function(_box){
   
   // LAYERS - Слои  //
   var layers = {};
+  var clear_layers = [];
   class Layer {
     constructor (index){
      var cnv = document.createElement('canvas');
@@ -79,15 +87,22 @@ var cherryEngine = function(_box){
     
     
   }
-  cherryEngine.create_layer = function (id, index) {
+  Cherry.create_layer = function (id, index, is_auto_clear) {
     if (layers[id]) return;
     layers[id] = new Layer(index);
+    if (is_auto_clear) clear_layers.push(layers[id]);
   
   };
   
-  cherryEngine.select_layer = function(id) {
+  Cherry.select_layer = function(id) {
    if (!layers[id]) return;
    layer = layers[id];
+   
+  };
+  
+  Cherry.get_layer = function(id){
+    if (!layers[id]) return;
+    return layers[id];
   };
   
   
@@ -116,15 +131,19 @@ var cherryEngine = function(_box){
   var _update = function() {
   
   active_scene.update();
+  var i = clear_layers.length-1;
+  for (;i>=0; i--) {
+    clear_layers[i].clear();
+  }
   active_scene.draw_nodes();
   active_scene.draw();
     
-  if (running) requestAnimationFrame(_update); //Цикл
+  if (running) requestAnimationFrame(_update); //Цикл анимации
   };
   
   this.start = function (name) {
    if (running) return;
-   running = cherryEngine.set_scene(name);
+   running = Cherry.set_scene(name);
    if (running) {
      _update();
    }
@@ -181,12 +200,13 @@ var cherryEngine = function(_box){
   };
   
   
-  // NODES - Ноды. Они же игровые объекты. //
+  // NODES - Ноды. //
   class Node {          //Базовый класс
    constructor (par) {
      this.position = par.position;
      this.size = par.size;
      this.type = 'Node';
+     this.layer = par.layer || 'main'; //kostil
      
      
    } 
@@ -207,7 +227,7 @@ var cherryEngine = function(_box){
     }
   
     draw () {
-      layer.draw_rect({
+      layers[this.layer].draw_rect({
         x : this.position.x,
         y : this.position.y,
         width : this.size.x,
@@ -240,7 +260,7 @@ var cherryEngine = function(_box){
   
   // Старт движка //
   _INIT();
-  window.cherryEngineGlobal = cherryEngine;
+  window.CherryGlobal = Cherry;
   
 };
 

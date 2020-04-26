@@ -1,4 +1,16 @@
-var cherryjs = new cherryEngine('my_game');
+var cherryjs = new Cherry('my_game', {
+  
+  back : {
+    'auto_clear' : false
+  },
+  
+  main :{
+    'auto_clear' : true
+  }
+  
+});
+
+
 
 cherryjs.create_scene('my_scene',function() {
   
@@ -6,12 +18,20 @@ cherryjs.create_scene('my_scene',function() {
     type : 'rectangle',
     position : cherryjs.vector2(50, 50),
     size : cherryjs.vector2(100, 100),
-    color : '#911e42' 
+    color : '#911e42',
+    layer : 'main'
     
   });
   
   this.init = function() {  //Вызываем любой объект тут
- 
+    console.log('inited');
+    cherryjs.get_layer('back').draw_rect({
+      x : 10, y : 10,
+      width : 500, height : 200,
+      color : '#696969'
+    });
+    
+    cherryjs.select_layer('main');
     
   };
   
