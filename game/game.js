@@ -20,7 +20,7 @@ cherryjs.create_scene('my_scene',function() {
     size : cherryjs.vector2(100, 100),
     color : '#911e42',
     layer : 'main'
-  //huo
+  //huoae
   });
   
   this.init = function() {  //Вызываем любой объект тут

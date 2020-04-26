@@ -183,6 +183,7 @@ var Cherry = function(_box, _layers){
   }
   
   this.create_scene = function (name, Construct){
+    if (scenes[name]) return; //проверка на похожие имена сцены
     scenes[name] = new Scene (new Construct());//новый конструкт сцены. Короче сюда будут отправляться характеристики чокаве
     
   };
