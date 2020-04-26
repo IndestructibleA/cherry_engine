@@ -1,4 +1,4 @@
-var cherryjs = new cherryEngine('game_canvas');
+var cherryjs = new cherryEngine('my_game');
 
 cherryjs.create_scene('my_scene',function() {
   
@@ -11,7 +11,7 @@ cherryjs.create_scene('my_scene',function() {
   });
   
   this.init = function() {  //Вызываем любой объект тут
-   console.log('Движок инициализирован и готов к работе. Версия 0.0.1'); 
+ 
     
   };
   

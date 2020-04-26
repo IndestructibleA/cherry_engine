@@ -1,7 +1,7 @@
  /* 
                                                                               
                                                      __.--~~.,-.__
- _____ _                      _____         _          `~-._.-(`-.__`-.
+ _____ _                      _____         _          `~-._.-(`-.__`-.          
 |     | |_ ___ ___ ___ _ _   |   __|___ ___|_|___ ___          \    `~~`
 |   --|   | -_|  _|  _| | |  |   __|   | . | |   | -_|    .--./ \
 |_____|_|_|___|_| |_| |_  |  |_____|_|_|_  |_|_|_|___|   /#   \  \.--.
@@ -16,41 +16,79 @@
 // Движок создан при поддержке Alcoshopers Lab
 // Автор: IndestructibleA   GitHub: https://github.com/IndestructibleA 
 
-var cherryEngine = function(_canvas){
+var cherryEngine = function(_box){
    'use strict';
   var cherryEngine = this; //ссылка на себя
         
         // Глобальные переменные //
-  var canvas = null
-        ,size = null
+  var 
+        size = null
         ,canvas_offset = null
         ,running = false
         ,active_scene = null
-        ,context = null; //расположение канваса
+        ,layer = null
         
-        // Инициализация движка через _INIT //
+        //  _INIT инициализация //
   var _INIT = function(){  
-    if (typeof _canvas !== 'object') canvas = document.getElementById(_canvas);
-    else canvas = _canvas;
-    context = canvas.getContext('2d');
-    size = vector2(canvas.width , canvas.height);
+    if (typeof _box !== 'object') _box = document.getElementById(_box);
     
-    var pos = canvas.getBoundingClientRect();
-    canvas_offset = vector2(pos.left, pos.right);
+    
+    
+    var box = _box.getBoundingClientRect();
+    canvas_offset = vector2(box.left, box.top);
+    size = vector2(box.width, box.height);
+    cherryEngine.create_layer('main', 0);
+    cherryEngine.select_layer('main');
+    
     //context.fillText('Canvas инициализирован. Жду дальнейших инструкций', 30, 20); 
     
-   // console.log(size.y);
+
   };
   
-  // MATH - Матеша //
+  // MATH //
   var int = function (num) { // проверка на число
     return isNumber(num) ? num : 0;
+  };
+  
+  // LAYERS - Слои  //
+  var layers = {};
+  class Layer {
+    constructor (index){
+     var cnv = document.createElement('canvas');
+     cnv.style.cssText = 'position: absolute; left: '+canvas_offset.x+'px; top: '+canvas_offset.y+'px;';
+     cnv.width = size.x;
+     cnv.height = size.y;
+     cnv.style.zIndex = 100 + index;
+     document.body.appendChild(cnv);
+     
+     this.canvas = cnv;
+     this.ctx = cnv.getContext('2d');
+     
+    }
+    
+    clear () {
+      this.ctx.clearRect(0, 0, size.x, size.y);
+      
+    }
+    
+    draw_rect (par) {
+      this.ctx.fillStyle = par.color;
+      this.ctx.fillRect(par.x, par.y, par.width, par.height); 
+      
+    }
+    
+    
   }
+  cherryEngine.create_layer = function (id, index) {
+    if (layers[id]) return;
+    layers[id] = new Layer(index);
   
+  };
   
-  
-  
-  
+  cherryEngine.select_layer = function(id) {
+   if (!layers[id]) return;
+   layer = layers[id];
+  };
   
   
   
@@ -169,9 +207,14 @@ var cherryEngine = function(_canvas){
     }
   
     draw () {
-      context.clearRect(0, 0, size.x, size.y);
-      context.fillStyle = this.color;
-    context.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+      layer.draw_rect({
+        x : this.position.x,
+        y : this.position.y,
+        width : this.size.x,
+        height : this.size.y,
+        color : this.color
+        
+      });
       
     }
   
@@ -191,6 +234,7 @@ var cherryEngine = function(_canvas){
    var n = create_node(params); 
    nds.push(n); //Будет создавать сами ноды с характеристиками объекта
    return n; 
+   
   };
   
   
@@ -201,3 +245,6 @@ var cherryEngine = function(_canvas){
 };
 
 var log = console.log; // на всякий случай. Думаю буду часто к ней обращаться
+
+
+//end
