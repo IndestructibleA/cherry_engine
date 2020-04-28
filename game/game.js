@@ -15,9 +15,10 @@ var cherryjs = new Cherry('my_game', {
 cherryjs.create_scene('my_scene',function() {
   
   var rect = cherryjs.create_node(this, {    //Здесь создаем объекты, которые сразу привязываются к этой сцене
-    type : 'rectangle',
+    type : 'circle',
     position : cherryjs.vector2(50, 50),
-    size : cherryjs.vector2(100, 100),
+    radius: 25,
+    //size : cherryjs.vector2(100, 100),
     color : '#911e42',
     layer : 'main'
   
@@ -28,7 +29,8 @@ cherryjs.create_scene('my_scene',function() {
     cherryjs.get_layer('back').draw_rect({
       x : 10, y : 10,
       width : 500, height : 200,
-      color : '#696969'
+      color : '#696969',
+      
     });
     
     cherryjs.select_layer('main');
@@ -37,13 +39,16 @@ cherryjs.create_scene('my_scene',function() {
   
   this.update = function(dt) {  // Обновление экрана.dt - delta time . Я знаю, 
                                // что ты забудешь про этот аргумент. Гугли.
-    //rect.move(cherryjs.vector2(1, 0));
-  cherryjs.view.move(cherryjs.vector2(-1, -1));
+  
+  
+ // rect.move(cherryjs.vector2(1, 1)); Движение
+  rect.radius += 0.1;
     
   };
   
   this.draw = function(ctx) {   // Отрисовка объекта (ctx) - это контекст, не забудь.
-  
+     rect.draw_box();
+     
     
   };
   

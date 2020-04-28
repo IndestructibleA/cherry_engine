@@ -28,6 +28,17 @@ var Cherry = function(_box, _layers){
         ,active_scene = null
         ,layer = null
         
+        
+        // CONFIG //      
+  
+  var config = {
+    font_size : 50,
+    font_name : 'serif',
+    font_base_line : 'top'
+    
+  };
+  
+        
         //  _INIT инициализация //
   var _INIT = function(){  
     if (typeof _box !== 'object') _box = document.getElementById(_box);
@@ -80,12 +91,50 @@ var Cherry = function(_box, _layers){
     }
     
     draw_rect (par) {
-      this.ctx.fillStyle = par.color;
-      var dpar = vpar(vector2(par.x, par.y));
-      this.ctx.fillRect(dpar.x, dpar.y, par.width, par.height); 
+      var dpar = vpar(par.x, par.y);
       
+      if (par.color) {
+      this.ctx.fillStyle = par.color;
+      this.ctx.fillRect(dpar.x, dpar.y, par.width, par.height);
+      }
+      
+      if (par.border) {
+        this.ctx.strokeStyle = par.border;
+        this.ctx.strokeRect(dpar.x, dpar.y, par.width, par.height);
+        
+      }  
     }
     
+    draw_circle (par) {
+      var dpar = vpar(par.x, par.y);
+      
+      this.ctx.fillStyle = par.color;
+        this.ctx.beginPath();
+      	this.ctx.arc(dpar.x+par.radius, dpar.y+par.radius, par.radius, 0, 2*Math.PI, false);
+	   	  
+	   	  if(par.color) {
+	   	  this.ctx.fillStyle = par.color;
+	   	  this.ctx.fill();
+	   	  }
+      
+      if (par.border) {
+        this.ctx.strokeStyle = par.border;
+        this.ctx.stroke();
+      }  
+    }
+    
+    draw_text (par) {
+      
+      if (par.font || par.size) 
+      this.ctx.font = (par.size || config.font_size)+'px '+(par.font || config.font_name);
+      
+      this.ctx.textBaseLine = config.font_base_line;
+      
+      if (par.color) {
+      this.ctx.fillStyle = par.color;
+      this.ctx.fillText(par.text, par.x, par.y);
+      }
+    }
     
   }
   Cherry.create_layer = function (id, index, is_auto_clear) {
@@ -136,8 +185,9 @@ var Cherry = function(_box, _layers){
   // ENGINE - Движок //
   
   var _update = function() {
-  
+  active_scene.update_nodes();
   active_scene.update();
+  
   var i = clear_layers.length-1;
   for (;i>=0; i--) {
     clear_layers[i].clear();
@@ -161,12 +211,26 @@ var Cherry = function(_box, _layers){
   
   class Scene { //вспомогательный класс
     constructor (scn) {
-     this.scene = scn; 
+     this.scene = scn;
+     this.count_nodes = 0;
+     
     }
     
     init () {
-      this.scene.init()
+      this.scene.init();
+      this.count_nodes = this.scene.nodes.length;
     }
+    
+     update_nodes () {
+      var i = 0;
+      for (;i < this.count_nodes; i++) {
+        if (typeof this.scene.nodes[i].draw !== 'undefined') {
+        this.scene.nodes[i].update();
+          
+        }
+      }
+    }
+    
     update () {
       this.scene.update()
     }
@@ -178,8 +242,8 @@ var Cherry = function(_box, _layers){
     }
    
     draw_nodes () {
-      var i = 0, len = this.scene.nodes.length;
-      for (;i < len; i++) {
+      var i = 0;
+      for (;i < this.count_nodes; i++) {
         if (typeof this.scene.nodes[i].draw !== 'undefined') {
         this.scene.nodes[i].draw();
           
@@ -224,12 +288,33 @@ var Cherry = function(_box, _layers){
       this.position.plus(par);
     }
     
+    draw_box (color) {
+        layers[this.layer].draw_rect({
+        x : this.position.x,
+        y : this.position.y,
+        width : this.size.x,
+        height : this.size.y,
+        border : color || '#ffff00'
+        
+      });
+      
+        layers[this.layer].draw_text({
+        x : this.position.x + this.size.x,
+        y : this.position.y,// + this.size.y,
+        text : 'Планета: Cherry '+this.size.x+' x '+this.size.y,
+        size : 30,
+        color : '#ffff00'
+        
+      });
+      
+    }
+    
   }
   
-  class NodeRect extends Node { //наследует класс Node
-    constructor(par){
-    super(par);
-    this.type = 'NodeRect';
+  class RectNode extends Node { // создает нод rectangle
+    constructor (par){
+    super (par);
+    this.type = 'RectNode';
     this.color = par.color;
     //console.log(this.position);
     }
@@ -248,9 +333,40 @@ var Cherry = function(_box, _layers){
   
   }
   
+   class CircleNode extends Node { //наследует класс Node
+    constructor (par) {
+    super(par);
+    this.type = 'CircleNode';
+    this.color = par.color;
+    this.radius = par.radius;
+    this.size = vector2();
+    }
+    
+    update () {
+      this.size.x = this.size.y = this.radius * 2;
+    
+    }
+  
+    draw () {
+      layers[this.layer].draw_circle({
+        x : this.position.x,
+        y : this.position.y,
+       
+        radius : this.radius,
+        color : this.color
+        
+      });
+      
+    }
+  
+  }
+  
+  
   var create_node = function (par) { //par от params, не путать
    if(par.type === 'rectangle')
-    return new NodeRect(par);
+    return new RectNode(par);
+   else if(par.type === 'circle')
+    return new CircleNode(par);  
     
   };
   
@@ -268,6 +384,7 @@ var Cherry = function(_box, _layers){
   // VIEWPORT - Позиция камеры //
  var view = Cherry.view = new function () {
    this.position = vector2();
+   this.scale = vector2(1,1);
    
    this.move = function (v) {
      this.position.plus(v);
@@ -276,8 +393,8 @@ var Cherry = function(_box, _layers){
    
   };
     
-    var vpar = function (par) {
-    return par.minus(view.position);
+    var vpar = function (x, y) {
+    return vector2(x, y).minus(view.position);
   };
 
   
