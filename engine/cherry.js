@@ -47,7 +47,7 @@ var Cherry = function(_box, _layers){
     Cherry.select_layer('main');
     }
     
-    //context.fillText('Canvas инициализирован. Жду дальнейших инструкций', 30, 20); 
+    //context.fillText('Canvas инициализирован', 30, 20); 
     
 
   };
@@ -81,7 +81,8 @@ var Cherry = function(_box, _layers){
     
     draw_rect (par) {
       this.ctx.fillStyle = par.color;
-      this.ctx.fillRect(par.x, par.y, par.width, par.height); 
+      var dpar = vpar(vector2(par.x, par.y));
+      this.ctx.fillRect(dpar.x, dpar.y, par.width, par.height); 
       
     }
     
@@ -113,9 +114,15 @@ var Cherry = function(_box, _layers){
       this.x = x || 0;
       this.y = y || 0;
     }
-    plus (par) {
-      this.x += par.x;
-      this.y += par.y;
+    plus (v) {
+      this.x += v.x;
+      this.y += v.y;
+      return this;
+    }
+    minus (v) {
+      this.x -= v.x;
+      this.y -= v.y;
+      return this;
     }
   }
   
@@ -257,6 +264,25 @@ var Cherry = function(_box, _layers){
    return n; 
    
   };
+  
+  // VIEWPORT - Позиция камеры //
+ var view = Cherry.view = new function () {
+   this.position = vector2();
+   
+   this.move = function (v) {
+     this.position.plus(v);
+     
+   };
+   
+  };
+    
+    var vpar = function (par) {
+    return par.minus(view.position);
+  };
+
+  
+
+  
   
   
   // Старт движка //

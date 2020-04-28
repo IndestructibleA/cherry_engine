@@ -20,7 +20,7 @@ cherryjs.create_scene('my_scene',function() {
     size : cherryjs.vector2(100, 100),
     color : '#911e42',
     layer : 'main'
-  //huoae
+  
   });
   
   this.init = function() {  //Вызываем любой объект тут
@@ -37,8 +37,8 @@ cherryjs.create_scene('my_scene',function() {
   
   this.update = function(dt) {  // Обновление экрана.dt - delta time . Я знаю, 
                                // что ты забудешь про этот аргумент. Гугли.
-    rect.move(cherryjs.vector2(1, 0));
-  
+    //rect.move(cherryjs.vector2(1, 0));
+  cherryjs.view.move(cherryjs.vector2(-1, -1));
     
   };
   
