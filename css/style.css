@@ -1,7 +1,71 @@
 body{
  /* background-color:#911e42; Вишневый цвет*/ 
- background-color: #eee;
+  background-color: #eee;
+
+}
+
+h1 {
+  text-align: center;  
+  text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;  
+}
+
+h2 {
+  text-align: center;  
+  color: #911e42;
+ }
+h5 {
+  
+  color: black;
+ }
+ 
+.updates {
+  text-align: left;  
+  color: #911e42;
+  padding: 15px;
+  }
+  
+.inform {
+  text-align: left;
+   
+}
+  
+.hyper {
+  
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  word-spacing: 2px;
+  color: #000000;
+  font-weight: normal;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  border: 2px dashed #911E42;
+  border-radius: 15px 15px 0px 0px;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+pre {
+
+  color: #911e42;
+  text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00; 
+ 
+  
+}
+
+canvas {
+  -webkit-box-shadow: 8px 8px 36px 21px rgba(0,0,0,0.24);
+  -moz-box-shadow: 8px 8px 36px 21px rgba(0,0,0,0.24);
+  box-shadow: 8px 8px 36px 21px rgba(0,0,0,0.24);
+  
+}
 
 
 
-
+.footer {
+  color: #911e42;
+  text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00; 
+ 
+}
