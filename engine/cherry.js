@@ -82,6 +82,7 @@ var Cherry = function(_box, _layers){
 
 let shoot = loadAudio(['audio/bolter_1.mp3', 'audio/sample.wav', 'audio/sample.ogg']);
 let ambient = loadAudio(['audio/ambient.mp3'], 0.4);
+let enemy = 0;
 let a;
 
  //shoot.setVolume(0.9); //динамическое изменение громкости
